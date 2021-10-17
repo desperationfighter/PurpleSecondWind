@@ -14,7 +14,7 @@
 
     internal class CloneBaseKit: Craftable
     {
-        private static readonly List<TechType> UnlockRequired = new List<TechType>() { TechType.BaseBulkhead, TechType.BaseRoom, TechType.BaseMapRoom, TechType.BaseMoonpool, TechType.BaseBioReactor, TechType.BaseNuclearReactor, TechType.BaseObservatory, TechType.BaseUpgradeConsole, TechType.BaseFiltrationMachine, TechType.BaseWaterPark };
+        private static readonly List<TechType> UnlockRequired = new() { TechType.BaseBulkhead, TechType.BaseRoom, TechType.BaseMapRoom, TechType.BaseMoonpool, TechType.BaseBioReactor, TechType.BaseNuclearReactor, TechType.BaseObservatory, TechType.BaseUpgradeConsole, TechType.BaseFiltrationMachine, TechType.BaseWaterPark };
         private GameObject processedPrefab;
         private readonly TechType TypeToClone;
 
@@ -33,49 +33,44 @@
 
         public override GameObject GetGameObject()
         {
-            GameObject go;
+            GameObject go = null;
             if(processedPrefab != null)
             {
-                go = GameObject.Instantiate(processedPrefab);
-                go.SetActive(true);
+                go = Object.Instantiate(processedPrefab, default, default, true);
                 return go;
             }
 
-            GameObject prefab = Utils.CreateGenericLoot(TechType);
+            var prefab = Utils.CreateGenericLoot(TechType);
 
             if(prefab != null)
             {
-                processedPrefab = GameObject.Instantiate(prefab);
+                processedPrefab = prefab;
                 processedPrefab.SetActive(false);
+                go = Object.Instantiate(processedPrefab, default, default, true);
             }
 
-            go = GameObject.Instantiate(processedPrefab);
-            go.SetActive(true);
             return go;
         }
 
         public override IEnumerator GetGameObjectAsync(IOut<GameObject> gameObject)
         {
-            GameObject go;
+            GameObject go = null;
             if(processedPrefab != null)
             {
-                go = GameObject.Instantiate(processedPrefab);
-                go.SetActive(true);
+                go = Object.Instantiate(processedPrefab, default, default, true);
                 gameObject.Set(go);
                 yield break;
             }
 
-            GameObject prefab = Utils.CreateGenericLoot(TechType);
+            var prefab = Utils.CreateGenericLoot(TechType);
             if(prefab != null)
             {
-                processedPrefab = GameObject.Instantiate(prefab);
+                processedPrefab = prefab;
                 processedPrefab.SetActive(false);
+                go = Object.Instantiate(processedPrefab, default, default, true);
             }
 
-            go = GameObject.Instantiate(processedPrefab);
-            go.SetActive(true);
             gameObject.Set(go);
-            yield break;
         }
 
         protected override RecipeData GetBlueprintRecipe()
